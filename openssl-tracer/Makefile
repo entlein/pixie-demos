@@ -15,7 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 openssl_tracer: openssl_tracer.cc probe_deployment.cc
-	clang++ --std=c++17 -o $@ $^ -lbcc
+	clang++ --std=c++17 -o $@ $^ -lbcc -I /usr/lib/llvm-18 -I/usr/include/llvm-18
 
 clean:
 	rm openssl_tracer
