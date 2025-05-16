@@ -9,7 +9,7 @@ This demo was created to accompany the "Debugging with eBPF Part 3: Tracing SSL/
 You must have the BCC development package installed. On Ubuntu, the package can be installed as follows:
 
 ```
-sudo apt install libbpfcc-dev
+sudo apt install libbpfcc-dev binutils clang llvm bcc python3 openssl -y
 ```
 
 Other distributions have similar commands.
@@ -29,34 +29,26 @@ A demo application to trace is included. It is a simple client-server written in
 First, you'll have to generate some certificates for the client and server.
 To keep things simple, you can generate some self-signed certificates as follows:
 
-```
-make -C ssl_client_server certs
-```
 
-To run the demo app, you'll need two terminals.
+To run the demo, you'll need two terminals.
 
-In one terminal, run the server:
+In one terminal, open a secure connection to e.g. google
 
 ```
-cd ssl_client_server; ./server.py
+openssl s_client -connect google.com:443
 ```
 
-In the second terminal, run the client:
+In the second terminal, run the tracer on the ProcessID (pid) of the above connection
 
 ```
-cd ssl_client_server; ./client.py
+sudo ./openssl_tracer $(pgrep -f openssl)
+```
+Now, back in the openssl terminal
+```
+GET / HTTP/1.1
+and press enter twice
 ```
 
-## Run Tracer
 
-The BPF tracer is run as follows:
 
-```
-sudo ./openssl_tracer <pid>
-```
 
-To run it on the demo app, run the following command in a separate terminal:
-
-```
-sudo ./openssl_tracer $(pgrep -f "./client.py")
-```
